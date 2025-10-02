@@ -17,11 +17,12 @@ app.use(cors({
     origin: [
         'http://localhost:5173',
         'http://localhost:8080',
-        'http://localhost:8081', // Vue frontend dev servers
-        'https://mobile-detailing-ecommerce-hrs7jgf1g-calebs-projects-05e5759a.vercel.app' // Production frontend
+        'http://localhost:8081',
+        'https://mobile-detailing-ecommerce.vercel.app' 
     ],
     credentials: true
 }));
+
 
 app.use(express.json());
 app.use(cookieParser());

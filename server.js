@@ -1,7 +1,3 @@
-// ...existing code...
-// Load environment variables
-
-
 // Load environment variables
 require('dotenv').config();
 
@@ -17,25 +13,18 @@ const jwt = require('jsonwebtoken');
 const app = express();
 
 // Middleware
-
 app.use(cors({
     origin: [
         'http://localhost:5173',
         'http://localhost:8080',
-        'http://localhost:8081' // Added for Vue frontend
+        'http://localhost:8081', // Vue frontend dev servers
+        'https://mobile-detailing-ecommerce-hrs7jgf1g-calebs-projects-05e5759a.vercel.app' // Production frontend
     ],
     credentials: true
 }));
+
 app.use(express.json());
 app.use(cookieParser());
-
-// Register contact route after CORS and JSON middleware
-const contactRoutes = require('./routes/contact');
-app.use('/api/contact', contactRoutes);
-
-// Register checkout route after app is created
-const checkoutRoutes = require('./routes/checkout');
-app.use('/api/checkout', checkoutRoutes);
 
 // MySQL Connection
 const db = mysql.createConnection({
@@ -53,29 +42,29 @@ db.connect(err => {
     }
 });
 
-
-// Modular Routes
+// Routes
 const authRoutes = require('./routes/auth');
 const bookingRoutes = require('./routes/bookings');
 const packageRoutes = require('./routes/packages');
-
+const contactRoutes = require('./routes/contact');
+const checkoutRoutes = require('./routes/checkout');
 const refundRoutes = require('./routes/refunds');
+const paymentRoutes = require('./routes/payments');
+const stripeRoutes = require('./routes/stripe');
 
+// Base route
 app.get('/', (req, res) => {
     res.send('Backend API is running');
 });
 
+// Register routes
 app.use('/api/auth', authRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/packages', packageRoutes);
-
+app.use('/api/contact', contactRoutes);
+app.use('/api/checkout', checkoutRoutes);
 app.use('/api/refunds', refundRoutes);
-
-
-const paymentRoutes = require('./routes/payments');
 app.use('/api/payments', paymentRoutes);
-
-const stripeRoutes = require('./routes/stripe');
 app.use('/api/stripe', stripeRoutes);
 
 // Start server
